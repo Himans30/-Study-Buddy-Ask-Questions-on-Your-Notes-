@@ -48,3 +48,15 @@
 - Mistral model pulled in Ollama:  
   ```bash
   ollama pull mistral
+
+**#Setup**
+# Clone the repo
+git clone https://github.com/Himans30/Study-Buddy-Ask-Questions-on-Your-Notes.git
+cd Study-Buddy-Ask-Questions-on-Your-Notes
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run FastAPI backend
+uvicorn app:app --reload
+
