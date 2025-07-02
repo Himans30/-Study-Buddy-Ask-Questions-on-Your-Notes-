@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Study Buddy – Ask Questions on Your Notes</title>
+  <style>
+    body { font-family: Arial; max-width: 600px; margin: auto; padding: 20px; }
+    input, button, textarea { width: 100%; padding: 10px; margin: 10px 0; }
+    #response { white-space: pre-wrap; background: #f4f4f4; padding: 10px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h2>📚 Study Buddy</h2>
+
+  <form id="upload-form">
+    <label>Select PDF or DOCX File:</label>
+    <input type="file" id="file-input" required />
+    <button type="submit">Upload & Process</button>
+  </form>
+
+  <form id="question-form" style="display:none;">
+    <label>Your Question:</label>
+    <textarea id="question" rows="3" required></textarea>
+    <button type="submit">Ask</button>
+  </form>
+
+  <h3>💬 Answer:</h3>
+  <div id="response">Waiting...</div>
+
+  <script>
+    const uploadForm = document.getElementById("upload-form");
+    const questionForm = document.getElementById("question-form");
+    const fileInput = document.getElementById("file-input");
+    const questionInput = document.getElementById("question");
+    const responseBox = document.getElementById("response");
+
+    uploadForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const file = fileInput.files[0];
+      const formData = new FormData();
+      formData.append("file", file);
+      responseBox.textContent = "Uploading...";
+      const res = await fetch("/upload/", { method: "POST", body: formData });
+      const data = await res.json();
+      responseBox.textContent = data.message || data.error;
+      if (data.message) questionForm.style.display = "block";
+    });
+
+    questionForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData();
+      formData.append("question", questionInput.value);
+      responseBox.textContent = "Thinking...";
+      const res = await fetch("/ask/", { method: "POST", body: formData });
+      const data = await res.json();
+      responseBox.textContent = data.answer;
+    });
+  </script>
+</body>
+</html>
